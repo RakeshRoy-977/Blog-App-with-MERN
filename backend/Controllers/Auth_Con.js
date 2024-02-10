@@ -1,5 +1,6 @@
 const AuthModel = require("../Models/Auth_Model");
 const bcrypt = require("bcryptjs");
+
 const signUp = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
@@ -13,6 +14,7 @@ const signUp = async (req, res, next) => {
       name,
       email,
       password: hashPassword,
+      blogs: [],
     });
 
     return res.json(User);
@@ -24,14 +26,21 @@ const signUp = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+
+    //checking User
     const CheckUser = await AuthModel.findOne({ email });
+
     if (!CheckUser) {
       return res.json(`User Doesn't Exist`);
     }
-    const comparePass = bcrypt.compare(password, CheckUser.password);
+
+    //comparePass
+    const comparePass = await bcrypt.compare(password, CheckUser.password);
     if (!comparePass) {
       return res.json(`wrong credentials`);
     }
+
+    return res.json({ CheckUser });
   } catch (error) {
     console.log({ error: error.message });
   }

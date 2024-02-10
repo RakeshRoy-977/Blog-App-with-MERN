@@ -13,6 +13,7 @@ connectToDB();
 
 //Routes
 app.use(`/api/auth`, require("./Routes/Auth_Routes"));
+app.use(`/api/blog`, require("./Routes/Blog_Routes"));
 
 //listing on
 app.listen(process.env.PORT || 3003, function () {
