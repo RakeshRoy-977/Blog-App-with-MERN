@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 const SignUp = () => {
-  // State for form fields
+  const Nav = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -12,17 +14,25 @@ const SignUp = () => {
   // Handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Add your signup logic here, e.g., send data to server
     console.log(formData);
+
+    const res = await axios.post(
+      "http://localhost:3003/api/auth/signup",
+      formData
+    );
+    if (res.data === "User created") {
+      Nav(`/login`);
+    } else {
+      toast(res.data);
+    }
+    console.log(res);
   };
 
   return (
@@ -92,6 +102,7 @@ const SignUp = () => {
           </p>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

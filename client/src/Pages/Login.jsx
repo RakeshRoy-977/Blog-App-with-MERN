@@ -1,7 +1,13 @@
+import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import { authActions } from "../Redux/store";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const Nav = useNavigate();
   // State for form fields
   const [formData, setFormData] = useState({
     email: "",
@@ -18,10 +24,23 @@ const Login = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your login logic here, e.g., send data to server
     console.log(formData);
+
+    //seding data to backend
+    const res = await axios.post(
+      "http://localhost:3003/api/auth/login",
+      formData
+    );
+    if (res.data.msg === `success`) {
+      dispatch(authActions.login());
+      localStorage.setItem("userId", res.data.CheckUser._id);
+      Nav(`/`);
+    } else {
+      toast.error(res.data);
+    }
+    console.log(res);
   };
 
   return (
@@ -80,6 +99,7 @@ const Login = () => {
           </p>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

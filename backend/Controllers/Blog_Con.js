@@ -23,9 +23,9 @@ const createBlog = async (req, res, next) => {
     await CheckUser.save({ session });
     await session.commitTransaction();
 
-    return res.json({ newBlog });
+    return res.json({ msg: `success`, newBlog });
   } catch (error) {
-    return console.log({ error: error.message });
+    return res.json(error.message);
   }
 };
 
@@ -40,16 +40,20 @@ const getAll = async (req, res, next) => {
     return console.log({ error: error.message });
   }
 };
+
 const getOne = async (req, res, next) => {
   try {
     const id = req.params.id;
+    if (!id) {
+      return res.json(`Id Not vailid`);
+    }
     const blog = await BlogModel.findById(id);
-
     return res.json(blog);
   } catch (error) {
     return console.log({ error: error.message });
   }
 };
+
 const updateBlog = async (req, res, next) => {
   try {
     const id = req.params.id;
@@ -91,7 +95,7 @@ const UserBlogs = async (req, res, next) => {
     if (!CheckUser) {
       return console.log(`User not Found !`);
     }
-    res.json({ blogs: CheckUser });
+    res.json(CheckUser);
   } catch (error) {
     return console.log({ error: error.message });
   }

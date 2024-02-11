@@ -17,7 +17,7 @@ const signUp = async (req, res, next) => {
       blogs: [],
     });
 
-    return res.json(User);
+    return res.json(`User created`);
   } catch (error) {
     console.log({ error: error.message });
   }
@@ -40,7 +40,7 @@ const login = async (req, res, next) => {
       return res.json(`wrong credentials`);
     }
 
-    return res.json({ CheckUser });
+    return res.json({ msg: `success`, CheckUser });
   } catch (error) {
     console.log({ error: error.message });
   }
